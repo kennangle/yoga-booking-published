@@ -6,7 +6,7 @@ A class-booking app: students book classes, instructors see rosters, the owner m
 
 > **Phase 1 note:** the button below is the *shape* of the finished flow. The pre-wired Neon integration is wired up in Phase 3. For now, deploy and provision the database manually per "Manual first deploy" below.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=REPLACE_WITH_REPO_URL)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/kennangle/yoga-booking-published)
 
 When the integration is live, clicking Deploy will: create the project on **your** Vercel account, prompt you to add a **Neon** Postgres database (provisioned on your account, connection string injected automatically), build, and hand you a live URL. No terminal, no local setup.
 

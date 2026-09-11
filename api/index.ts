@@ -21,33 +21,139 @@ export const config = { runtime: "nodejs" };
 const PAGE = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yoga Booking</title>
+<title>Serenity Yoga — Class Schedule</title>
 <style>
-  body { font-family: "Iowan Old Style", Georgia, serif; background: #fbfaf7;
-         color: #1a2b34; max-width: 640px; margin: 2rem auto; padding: 0 1.25rem; }
-  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
-  .who { font-size: .85rem; color: #4a5c66; margin-bottom: 1.5rem; }
-  .who select { font: inherit; font-size: .85rem; padding: .15rem .4rem; }
-  .class { display: flex; align-items: center; justify-content: space-between;
-           gap: 1rem; border: 1px solid #dfe4e6; border-radius: 10px;
-           padding: .8rem 1rem; margin-bottom: .6rem; background: #fff; }
-  .meta .title { font-weight: 600; }
-  .meta .seats { font-size: .8rem; color: #4a5c66; font-family: ui-monospace, monospace; }
-  button { font: inherit; cursor: pointer; border: 1px solid #0f6d76;
-           background: #0f6d76; color: #fff; padding: .4rem .9rem; border-radius: 8px; }
-  button:disabled { background: #fbfaf7; color: #4a5c66; border-color: #dfe4e6; cursor: not-allowed; }
-  .msg { font-size: .8rem; margin-top: .3rem; font-family: ui-monospace, monospace; min-height: 1em; }
-  .msg.ok { color: #0f6d76; } .msg.err { color: #a03449; }
+  :root {
+    --terracotta: #c05f3c;
+    --terracotta-dark: #a34e30;
+    --ink: #3a3630;
+    --ink-soft: #7a736a;
+    --ground: #faf7f2;
+    --panel: #ffffff;
+    --line: #e7e0d6;
+    --teal: #0f6d76;
+    --rose: #a03449;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    line-height: 1.55;
+  }
+  /* ---- Top nav ---- */
+  .nav {
+    display: flex; align-items: center; gap: 2rem;
+    padding: 1.1rem 2rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--ground);
+  }
+  .brand {
+    font-size: 1.5rem; font-weight: 700; letter-spacing: -.01em;
+    color: var(--terracotta); text-decoration: none; margin-right: .5rem;
+  }
+  .nav .links { display: flex; gap: 1.6rem; flex: 1; }
+  .nav .links a {
+    color: var(--ink); text-decoration: none; font-size: 1rem;
+    padding-bottom: .2rem;
+  }
+  .nav .links a.active {
+    color: var(--terracotta); border-bottom: 2px solid var(--terracotta);
+  }
+  .nav .signin {
+    color: var(--ink); text-decoration: none; font-size: 1rem;
+  }
+  .nav .cta {
+    background: var(--terracotta); color: #fff; text-decoration: none;
+    font-size: .95rem; padding: .55rem 1.1rem; border-radius: 8px;
+  }
+  .nav .cta:hover { background: var(--terracotta-dark); }
+  /* ---- Hero ---- */
+  .hero {
+    padding: 2.6rem 2rem 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .hero h1 { font-size: 3rem; margin: 0 0 .5rem; letter-spacing: -.015em; }
+  .hero p { font-size: 1.15rem; color: var(--ink-soft); margin: 0; }
+  /* ---- Booking-as control (the one live control) ---- */
+  .bookingbar {
+    display: flex; align-items: center; gap: .6rem;
+    padding: 1.2rem 2rem 0;
+  }
+  .bookingbar label { font-size: .95rem; color: var(--ink-soft); }
+  .bookingbar select {
+    font: inherit; font-size: .95rem; padding: .5rem .7rem;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: var(--panel); color: var(--ink); min-width: 260px;
+  }
+  /* ---- Class list ---- */
+  .wrap { max-width: 940px; margin: 0 auto; padding: 1.4rem 2rem 3rem; }
+  .class {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.1rem 1.3rem; margin-bottom: .8rem; background: var(--panel);
+  }
+  .meta .title { font-weight: 700; font-size: 1.15rem; }
+  .meta .seats {
+    font-size: .85rem; color: var(--ink-soft);
+    font-family: ui-monospace, Menlo, monospace; margin-top: .15rem;
+  }
+  button {
+    font: inherit; cursor: pointer; border: 1px solid var(--terracotta);
+    background: var(--terracotta); color: #fff;
+    padding: .6rem 1.4rem; border-radius: 8px; font-size: 1rem;
+  }
+  button:hover:not(:disabled) { background: var(--terracotta-dark); }
+  button:disabled {
+    background: var(--ground); color: var(--ink-soft);
+    border-color: var(--line); cursor: not-allowed;
+  }
+  .msg {
+    font-size: .8rem; margin-top: .3rem;
+    font-family: ui-monospace, Menlo, monospace; min-height: 1em;
+  }
+  .msg.ok { color: var(--teal); }
+  .msg.err { color: var(--rose); }
+  @media (max-width: 620px) {
+    .nav { gap: 1rem; padding: 1rem 1.25rem; flex-wrap: wrap; }
+    .nav .links { gap: 1rem; order: 3; flex-basis: 100%; }
+    .hero { padding: 1.8rem 1.25rem 1.4rem; }
+    .hero h1 { font-size: 2.1rem; }
+    .bookingbar { padding: 1rem 1.25rem 0; flex-wrap: wrap; }
+    .bookingbar select { min-width: 0; width: 100%; }
+    .wrap { padding: 1.2rem 1.25rem 2.5rem; }
+  }
 </style></head><body>
-<h1>Class Schedule</h1>
-<div class="who">Booking as
+<nav class="nav">
+  <a href="/" class="brand">Serenity Yoga</a>
+  <div class="links">
+    <a href="/" class="active">Schedule</a>
+    <a href="/">Instructors</a>
+    <a href="/">Pricing</a>
+  </div>
+  <a href="/" class="signin">Sign In</a>
+  <a href="/" class="cta">Get Started</a>
+</nav>
+
+<header class="hero">
+  <h1>Class Schedule</h1>
+  <p>Find your perfect session and book your spot. All levels welcome.</p>
+</header>
+
+<div class="bookingbar">
+  <label for="who">Booking as</label>
   <select id="who">
     <option value="u_self">You (student)</option>
     <option value="u_c">Cara (student)</option>
     <option value="u_owner">Olivia (owner — no booking rights)</option>
   </select>
 </div>
-<div id="list">Loading…</div>
+
+<main class="wrap">
+  <div id="list">Loading…</div>
+</main>
+
 <script>
   const who = document.getElementById("who");
   const list = document.getElementById("list");
